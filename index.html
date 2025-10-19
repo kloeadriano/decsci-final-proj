@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Alex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Special Elite', cursive;
+            background-color: #1e3a8a;
+            color: white;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 384px;
+            height: 820px; /* Reduced height to prevent cutoff */
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #3b82f6, #1e40af);
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(59, 130, 246, 0.3);
+            z-index: 1;
+        }
+
+        .slide-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .text-box {
+            position: absolute;
+            text-align: center;
+            color: white;
+            z-index: 10;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-placeholder {
+            position: absolute;
+            overflow: hidden;
+        
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 15px; /* Moved up slightly */
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 20;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .dot.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background-color: white;
+            width: 0%;
+            transition: width 0.1s linear;
+            z-index: 20;
+        }
+
+        /* Adjusted positioning to fit better in shorter container */
+        .slide-1 .text-1 {
+            width: 288px;
+            top: 220px; /* Moved up */
+            left: 49px;
+            font-size: 2rem;
+            line-height: 1.3;
+        }
+
+        .slide-1 .text-2 {
+            top: 30px; /* Moved up */
+            left: 37px;
+            font-size: 2rem;
+        }
+
+        .slide-1 .img-1 {
+            width: 121px;
+            height: 254px;
+            top: 430px; /* Moved up */
+            left: 134px;
+        }
+
+        .slide-2 .text-1 {
+            width: 176px;
+            top: 140px; /* Moved up */
+            left: 1px;
+            font-size: 2rem;
+        }
+
+        .slide-2 .img-1 {
+            width: 207px;
+            height: 181px;
+            top: 110px; /* Moved up */
+            left: 173px;
+        }
+
+        .slide-3 .text-1 {
+            width: 176px;
+            top: 140px; /* Moved up */
+            left: 1px;
+            font-size: 2rem;
+        }
+
+        .slide-3 .text-2 {
+            width: 176px;
+            top: 410px; /* Moved up */
+            left: 206px;
+            font-size: 2rem;
+        }
+
+        .slide-3 .img-1 {
+            width: 207px;
+            height: 181px;
+            top: 100px; /* Moved up */
+            left: 171px;
+        }
+
+        .slide-3 .img-2 {
+            width: 185px;
+            height: 165px;
+            top: 370px; /* Moved up */
+            left: 14px;
+        }
+
+        .slide-3 .img-3 {
+            width: 80px;
+            height: 86px;
+            top: 490px; /* Moved up */
+            left: 155px;
+        }
+
+        .slide-4 .text-1 {
+            width: 176px;
+            top: 140px; /* Moved up */
+            left: 1px;
+            font-size: 2rem;
+        }
+
+        .slide-4 .text-2 {
+            width: 176px;
+            top: 410px; /* Moved up */
+            left: 206px;
+            font-size: 2rem;
+        }
+
+        .slide-4 .text-3 {
+            width: 384px;
+            top: 680px; /* Moved up */
+            left: 7px;
+            font-size: 2rem;
+        }
+
+        .slide-4 .img-1 {
+            width: 207px;
+            height: 181px;
+            top: 100px; /* Moved up */
+            left: 171px;
+        }
+
+        .slide-4 .img-2 {
+            width: 185px;
+            height: 165px;
+            top: 370px; /* Moved up */
+            left: 14px;
+        }
+
+        .slide-4 .img-3 {
+            width: 80px;
+            height: 86px;
+            top: 490px; /* Moved up */
+            left: 155px;
+        }
+
+        .slide-5 .text-1 {
+            width: 320px;
+            top: 260px; /* Moved up */
+            left: 21px;
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+
+        .slide-5 .text-2 {
+            width: 192px;
+            top: 660px; /* Moved up */
+            left: 6px;
+            font-size: 2rem;
+        }
+
+        .slide-5 .img-1 {
+            width: 229px;
+            height: 287px;
+            top: 530px; /* Moved up */
+            left: 183px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="slideshow-container">
+        <div class="progress-bar"></div>
+        
+        <!-- Slide 1 -->
+        <div class="slide slide-1 active">
+            <div class="slide-content">
+                <div class="text-box text-1">I wanna be the melting candle to your flame</div>
+                <div class="text-box text-2">Alex,</div>
+                <div class="image-placeholder img-1"><img src="images/candle.png" alt="Candle"></div>
+            </div>
+        </div>
+        
+        <!-- Slide 2 -->
+        <div class="slide slide-2">
+            <div class="slide-content">
+                <div class="text-box text-1">Your closest friend</div>
+                <div class="image-placeholder img-1"><img src="images/friend.png" alt="Friend"></div>
+            </div>
+        </div>
+        
+        <!-- Slide 3 -->
+        <div class="slide slide-3">
+            <div class="slide-content">
+                <div class="text-box text-1">Your closest friend</div>
+                <div class="text-box text-2">Your fiercest love</div>
+                <div class="image-placeholder img-1"><img src="images/friend.png" alt="Friend"></div>
+                <div class="image-placeholder img-2"><img src="images/love.png" alt="Love"></div>
+                <div class="image-placeholder img-3"><img src="images/heart.png" alt="Heart"></div>
+            </div>
+        </div>
+        
+        <!-- Slide 4 -->
+        <div class="slide slide-4">
+            <div class="slide-content">
+                <div class="text-box text-1">Your closest friend</div>
+                <div class="text-box text-2">Your fiercest love</div>
+                <div class="text-box text-3">One and the same :]</div>
+                <div class="image-placeholder img-1"><img src="images/friend.png" alt="friend"></div>
+                <div class="image-placeholder img-2"><img src="images/love.png" alt="Love"></div>
+                <div class="image-placeholder img-3"><img src="images/heart.png" alt="Heart"></div>
+            </div>
+        </div>
+        
+        <!-- Slide 5 -->
+        <div class="slide slide-5">
+            <div class="slide-content">
+                <div class="text-box text-1">Can I please be your girlfriend?</div>
+                <div class="text-box text-2">(WHAAAAT)</div>
+                <div class="image-placeholder img-1"><img src="images/what.png" alt="WHAAAAT"></div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="dot active" data-slide="0"></div>
+            <div class="dot" data-slide="1"></div>
+            <div class="dot" data-slide="2"></div>
+            <div class="dot" data-slide="3"></div>
+            <div class="dot" data-slide="4"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            const progressBar = document.querySelector('.progress-bar');
+            let currentSlide = 0;
+            let slideInterval;
+            const slideDuration = 3000; // 3 seconds
+            
+            
+            // Function to show a specific slide
+            function showSlide(index) {
+                // Remove active class from all slides and dots
+                slides.forEach(slide => slide.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                
+                // Add active class to current slide and dot
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+                
+                // Reset and restart progress bar
+                progressBar.style.width = '0%';
+                startProgressBar();
+                
+                currentSlide = index;
+            }
+            
+            // Function to start the progress bar animation
+            function startProgressBar() {
+                let width = 0;
+                const interval = 30; // Update every 30ms
+                const increment = (interval / slideDuration) * 100;
+                
+                const progressInterval = setInterval(() => {
+                    width += increment;
+                    progressBar.style.width = width + '%';
+                    
+                    if (width >= 100) {
+                        clearInterval(progressInterval);
+                    }
+                }, interval);
+            }
+            
+            // Function to go to next slide
+            function nextSlide() {
+                let nextIndex = (currentSlide + 1) % slides.length;
+                showSlide(nextIndex);
+            }
+            
+            // Add click events to dots
+            dots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const slideIndex = parseInt(this.getAttribute('data-slide'));
+                    showSlide(slideIndex);
+                    resetInterval();
+                });
+            });
+            
+            // Reset the automatic slide interval
+            function resetInterval() {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, slideDuration);
+            }
+            
+            // Start the slideshow
+            function startSlideshow() {
+                showSlide(0);
+                slideInterval = setInterval(nextSlide, slideDuration);
+            }
+            
+            // Initialize the slideshow
+            startSlideshow();
+        });
+    </script>
+</body>
+    <audio id="bgMusic" loop>
+    <source src="audio\Someday.mp3" type="audio/mpeg">
+    Your browser does not support audio
+    </audio>
+</html>
