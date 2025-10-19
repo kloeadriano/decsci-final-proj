@@ -81,7 +81,6 @@
         .image-placeholder {
             position: absolute;
             overflow: hidden;
-        
         }
 
         .controls {
@@ -118,6 +117,41 @@
             width: 0%;
             transition: width 0.1s linear;
             z-index: 20;
+        }
+
+        /* Audio Controls */
+        .audio-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 30;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .audio-controls:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .audio-controls svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .audio-controls.muted svg {
+            opacity: 0.7;
+        }
+
+        #bgMusic {
+            display: none;
         }
 
         /* Adjusted positioning to fit better in shorter container */
@@ -254,13 +288,24 @@
             top: 530px; /* Moved up */
             left: 183px;
         }
-
-        
     </style>
 </head>
 <body>
+    <!-- Audio Element - Place this right after body -->
+    <audio id="bgMusic" loop>
+        <source src="audio/Someday.mp3" type="audio/mpeg">
+        Your browser does not support audio
+    </audio>
+
     <div class="slideshow-container">
         <div class="progress-bar"></div>
+        
+        <!-- Audio Control Button -->
+        <div class="audio-controls" id="audioToggle">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+        </div>
         
         <!-- Slide 1 -->
         <div class="slide slide-1 active">
@@ -325,10 +370,49 @@
             const slides = document.querySelectorAll('.slide');
             const dots = document.querySelectorAll('.dot');
             const progressBar = document.querySelector('.progress-bar');
+            const audio = document.getElementById('bgMusic');
+            const audioToggle = document.getElementById('audioToggle');
             let currentSlide = 0;
             let slideInterval;
+            let isMuted = false;
             const slideDuration = 3000; // 3 seconds
             
+            // Audio functionality
+            function startAudio() {
+                audio.volume = 0.5; // Set volume to 50%
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('Audio started successfully');
+                    }).catch(error => {
+                        console.log('Auto-play prevented, waiting for user interaction');
+                        audioToggle.classList.add('muted');
+                        isMuted = true;
+                    });
+                }
+            }
+            
+            // Toggle mute/unmute
+            audioToggle.addEventListener('click', function() {
+                if (isMuted) {
+                    audio.volume = 0.5;
+                    audio.play();
+                    audioToggle.classList.remove('muted');
+                    isMuted = false;
+                } else {
+                    audio.volume = 0;
+                    audioToggle.classList.add('muted');
+                    isMuted = true;
+                }
+            });
+            
+            // Start audio when user interacts with the page
+            document.body.addEventListener('click', function() {
+                if (audio.paused && !isMuted) {
+                    startAudio();
+                }
+            }, { once: true });
             
             // Function to show a specific slide
             function showSlide(index) {
@@ -388,6 +472,8 @@
             function startSlideshow() {
                 showSlide(0);
                 slideInterval = setInterval(nextSlide, slideDuration);
+                // Start audio after a short delay
+                setTimeout(startAudio, 1000);
             }
             
             // Initialize the slideshow
@@ -395,9 +481,4 @@
         });
     </script>
 </body>
-    <audio id="bgMusic" loop>
-    <source src="audio\Someday.mp3" type="audio/mpeg">
-    Your browser does not support audio
-    </audio>
-
 </html>
